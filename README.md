@@ -1,3 +1,3 @@
 # sw-algorithm
 
-This project is an implamentation of the Smith-Waterman algorithm in python. It is not yet completed.
+This project is an implamentation of a sequence alignment algorithm, Smith-Waterman, in python. It is not yet completed.
