@@ -1,3 +1,3 @@
-# sw-algorithm
+# Smith Waterman Python Implamentation
 
-This project is an implamentation of a sequence alignment algorithm, Smith-Waterman, in python. It is not yet completed.
+This program is a work-in-progress that is designed to simulate the local sequence alignment algorithm, Smith-Waterman. It's still an early work in progress, but updates are coming soon.
