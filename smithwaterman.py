@@ -1,75 +1,59 @@
-def smith_waterman(seq1, seq2, match_score, mismatch_penalty, gap_penalty):
-    '''
-    step 1: initialization
-    ----------------------
-    create a matrix and initialize it with zeros
-    '''
-    matrix = []
+import numpy as np
+import pandas as pd
 
-    for i in range(len(seq2) + 1):
-        row = [0] * (len(seq2) + 1)
-        matrix.append(row)
-
-    '''
-    step 2: matrix filling
-    ----------------------
-    fill in the matrix based on the match, mismatch, and gap penalty parameters
-    '''
-    for i in range(1, len(seq1)+1):
-        for j in range(1, len(seq2) + 1):
-            #conditional to find score for match / mismatch
-            if seq1[i - 1] == seq2[j - 1]:
-                current_match_score = match_score  
-            else: 
-                mismatch_penalty
-
-            match = matrix[i - 1][j - 1] + current_match_score
-            delete = matrix[i-1][j] + gap_penalty
-            insert = matrix[i][j-1] + gap_penalty
-            matrix[i][j] = max(0, match, insert, delete)
+def smith_waterman(seq1, seq2, match_score=2, mismatch_penalty=-1, gap_penalty=-1):
     
-    '''
-    step 3: finding in MSP
-    ----------------------
-    find the maximum scoring pair (the highest scoring segment pair)
-    '''
-    max_score = 0
-    max_idx_i, max_idx_j = 0, 0 #defined in step 3, utilized in step 4
-    for i in range (len(seq1)+1):
-        for j in range (len(seq2)+1):
-            if matrix[i][j] > max_score:
-                max_score = matrix[i][j]
-                max_idx_i = i
-                max_idx_j = j
+    #initialization step: create the matrix with appropriate dimensions
+    len_seq1, len_seq2 = len(seq1), len(seq2)
+    matrix = np.zeros((len_seq1 + 1, len_seq2 + 1))
 
-    '''
-    step 4: traceback
-    ----------------------
-    traceback to find the alignment
-    '''        
+    #matrix filling step: go through the matrix and assign penalities based on whether the step in the loop is a match, mismatch, or gap
+    for i in range(1, len_seq1 + 1):
+        for j in range(1, len_seq2 + 1):
+            match = matrix[i - 1, j - 1] + (match_score if seq1[i - 1] == seq2[j - 1] else mismatch_penalty)
+            delete = matrix[i - 1, j] + gap_penalty
+            insert = matrix[i, j - 1] + gap_penalty
+            matrix[i, j] = max(0, match, delete, insert)
+    print(matrix)
 
+    max_score = np.max(matrix)
+    max_indices = np.unravel_index(np.argmax(matrix), matrix.shape)
 
+    # traceback to find the alignment
+    alignment_seq1, alignment_seq2 = '', ''
+    i, j = max_indices
+    while i > 0 and j > 0 and matrix[i, j] > 0:
+        if matrix[i, j] == matrix[i - 1, j - 1] + (match_score if seq1[i - 1] == seq2[j - 1] else mismatch_penalty):
+            alignment_seq1 = seq1[i - 1] + alignment_seq1
+            alignment_seq2 = seq2[j - 1] + alignment_seq2
+            i -= 1
+            j -= 1
+        elif matrix[i, j] == matrix[i - 1, j] + gap_penalty:
+            alignment_seq1 = seq1[i - 1] + alignment_seq1
+            alignment_seq2 = '-' + alignment_seq2
+            i -= 1
+        else:
+            alignment_seq1 = '-' + alignment_seq1
+            alignment_seq2 = seq2[j - 1] + alignment_seq2
+            j -= 1
 
+    return alignment_seq1, alignment_seq2, max_score
 
-def main():
-    #test strings
-    sequence1 = "ACTG"
-    sequence2 = "ACTG"
+# read sequences from a CSV file using Pandas
+sequences_df = pd.read_csv('sequences.csv')
 
-    #implement deafault score if user presses enter
-    match = int(input("Enter match score: "))
-    mismatch = int(input("Enter mismatch penalty: "))
-    gap = int(input("Enter gap penalty: "))
+# loop through each row in the DataFrame
+for index, row in sequences_df.iterrows():
+    seq1 = row['Sequence1']
+    seq2 = row['Sequence2']
 
-    smith_waterman(sequence1, sequence2, match, mismatch, gap)
+    # perform sequence alignment
+    alignment1, alignment2, score = smith_waterman(seq1, seq2)
 
-
-if __name__ == "__main__":
-    main()
-
-
-    
-
-
-
-    
+    # present alignment results using Pandas DataFrame
+    alignment_df = pd.DataFrame({'Alignment1': list(alignment1),
+                                 'Alignment2': list(alignment2)})
+    print("Pair:", index + 1)
+    print(alignment_df)
+    print("Alignment Score:", score)
+    print()
