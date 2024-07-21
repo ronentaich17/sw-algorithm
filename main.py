@@ -1,4 +1,5 @@
 from sw import sw
+from sequence import Sequence
 import pandas as pd
 
 def main():
@@ -7,8 +8,8 @@ def main():
     
     # loop through each row in the DataFrame
     for index, row in sequences_df.iterrows():
-        seq1 = row['Sequence1']
-        seq2 = row['Sequence2']
+        seq1 = Sequence(row['Sequence1'])
+        seq2 = Sequence(row['Sequence2'])
 
         # perform sequence alignment
         alignment1, alignment2, score = sw(seq1, seq2)
@@ -21,4 +22,5 @@ def main():
         print("Alignment Score:", score)
         print()
 
-main()
+if __name__ == '__main__':
+    main()

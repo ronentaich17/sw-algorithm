@@ -2,10 +2,10 @@ import numpy as np
 import pandas as pd
 from sw_helper_methods import *
 
-def sw(seq1, seq2, match_score=2, mismatch_penalty=-1, gap_penalty=-1):
+def sw(seq1: Sequence, seq2: Sequence, match_score=2, mismatch_penalty=-1, gap_penalty=-1):
     
     #initialization step: create the matrix with appropriate dimensions
-    len_seq1, len_seq2 = len(seq1), len(seq2)
+    len_seq1, len_seq2 = seq1.get_length(), seq2.get_length()
     matrix = np.zeros((len_seq1 + 1, len_seq2 + 1))
 
     matrix = matrix_filling_step(matrix=matrix, len_seq1=len_seq1, len_seq2=len_seq2, match_score=match_score, seq1=seq1, seq2=seq2, mismatch_penalty=mismatch_penalty, gap_penalty=gap_penalty)
