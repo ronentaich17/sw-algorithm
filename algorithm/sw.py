@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from sw_helper_methods import *
+from algorithm.sw_helper_methods import *
 
 def sw(seq1: Sequence, seq2: Sequence, match_score=2, mismatch_penalty=-1, gap_penalty=-1):
     

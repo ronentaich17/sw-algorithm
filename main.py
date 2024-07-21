@@ -1,5 +1,5 @@
-from sw import sw
-from sequence import Sequence
+from algorithm.sw import sw
+from algorithm.sequence import Sequence
 import pandas as pd
 
 def main():

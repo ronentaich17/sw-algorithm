@@ -1,5 +1,5 @@
 import numpy as np
-from sequence import Sequence
+from algorithm.sequence import Sequence
 
 def find_max_score(matrix: list[list[int]]):
     return np.max(matrix)
