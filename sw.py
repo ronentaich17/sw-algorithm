@@ -19,23 +19,3 @@ def sw(seq1, seq2, match_score=2, mismatch_penalty=-1, gap_penalty=-1):
     alignment_seq1, alignment_seq2 = matrix_traceback_step(matrix=matrix, match_score=match_score, seq1=seq1, seq2=seq2, mismatch_penalty=mismatch_penalty, gap_penalty=gap_penalty, i=i, j=j, alignment_seq1= '', alignment_seq2= '')
 
     return alignment_seq1, alignment_seq2, max_score
-
-# read sequences from a CSV file using Pandas
-sequences_df = pd.read_csv('sequences.csv')
-
-# loop through each row in the DataFrame
-for index, row in sequences_df.iterrows():
-    seq1 = row['Sequence1']
-    seq2 = row['Sequence2']
-
-    # perform sequence alignment
-    alignment1, alignment2, score = sw(seq1, seq2)
-
-    # present alignment results using Pandas DataFrame
-    alignment_df = pd.DataFrame({'Alignment1': list(alignment1),
-                                 'Alignment2': list(alignment2)})
-    print("Pair:", index + 1)
-    print(alignment_df)
-    print("Alignment Score:", score)
-    print()
-    
